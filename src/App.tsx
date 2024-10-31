@@ -1,11 +1,11 @@
-import { ListaDeFilmes } from "./components/ListaDeFilmes"
+import { ListaDeFilmes } from "./components";
 
 const App = () => {
   return (
     <div>
-      <ListaDeFilmes/>
+      <ListaDeFilmes />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
