@@ -1,4 +1,4 @@
-import { ListaDeFilmes } from "./components";
+import { ListaDeFilmes } from "./components/ListaDeFilmes";
 
 const App = () => {
   return (

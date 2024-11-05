@@ -4,6 +4,8 @@
 @tailwind utilities;
 
 
-
+li {
+    margin : 5px 0 !important;
+}
 
 
