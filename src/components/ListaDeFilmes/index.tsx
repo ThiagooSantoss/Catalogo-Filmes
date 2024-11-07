@@ -17,7 +17,7 @@ export const ListaDeFilmes = () => {
   };
 
   const [filmes, setFilmes] = useState([]);
-  const [selectedFilme, setSelectedFilme] = useState(null);
+  const [selectedFilme, setSelectedFilme] = useState<any>(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const buscaFilmes = async () => {
@@ -48,20 +48,20 @@ export const ListaDeFilmes = () => {
   };
 
   return (
-    // <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-50 to-gray-200 p-5 dark:bg-gray-800">
-
-    <div className="flex justify-center mx-auto w-full bg-white bg-gradient-to-r dark:bg-gray-100 p-5">
+    <div className="flex gap-6 max-h-screen overflow-y-scroll mx-auto w-full bg-white bg-gradient-to-r dark:bg-gray-100 p-5">
       <List
         unstyled
-        className="cursor-pointer border border-gray-700 max-w-md divide-y divide-gray-200 dark:divide-gray-700"
+        className="flex flex-wrap flex-col overflow-x-auto cursor-pointer w-2/3 divide-y divide-gray-200 dark:divide-gray-700"
       >
         {filmes.map((filme) => (
-          <List.Item 
-            onClick={() =>
-              isModalOpen ? closeModalHandler() : openModalHandler(filme)
-            }
+          <List.Item
+            onClick={() => setSelectedFilme(filme)}
             key={filme.id}
-            className="p-2"
+            className={`w-1/3 p-2 min-w-80 transition-all duration-300 ${
+              selectedFilme?.id === filme.id
+                ? "bg-gray-400 dark:bg-gray-700 shadow-md rounded-lg"
+                : "bg-white dark:bg-gray-100"
+            }`}
           >
             <div className="flex items-center space-x-4 rtl:space-x-reverse ">
               <Avatar
@@ -87,6 +87,15 @@ export const ListaDeFilmes = () => {
           />
         )}
       </List>
+
+      <div className="w-1/3 border border-gray-700 bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold mb-2 text-gray-100 border-b border-gray-600 pb-2">
+          {selectedFilme?.original_title}
+        </h1>
+        <p className="text-sm text-gray-300 mt-2 leading-relaxed">
+          {selectedFilme?.overview}
+        </p>
+      </div>
     </div>
   );
 };
