@@ -1,26 +1,15 @@
 "use client";
 
 import "../../index.css";
+import { Filme } from "../../types/filme";
+import { Video } from "../../types/video";
 import { List, Avatar } from "flowbite-react";
 import { useEffect, useState } from "react";
-
-interface Filme {
-  id: number;
-  original_title: string;
-  overview: string;
-  poster_path: string;
-}
-
-interface Video {
-  key: string;
-  site: string;
-  type: string;
-}
 
 export const ListaDeFilmes = () => {
   const [filmes, setFilmes] = useState<Filme[]>([]);
   const [selectedFilme, setSelectedFilme] = useState<Filme | null>(null);
-  const [trailerKey, setTrailerKey] = useState<string | null>(null);
+  const [trailer, setTrailer] = useState<string>("");
 
   useEffect(() => {
     const API_AUTH = import.meta.env.VITE_API_AUTH;
@@ -44,7 +33,7 @@ export const ListaDeFilmes = () => {
 
   const handleFilmeClick = async (filme: Filme) => {
     setSelectedFilme(filme);
-    setTrailerKey(null); // Limpa o trailer anterior
+    setTrailer("");
 
     const API_AUTH = import.meta.env.VITE_API_AUTH;
     const options = {
@@ -55,32 +44,37 @@ export const ListaDeFilmes = () => {
       },
     };
 
-    // Busca o trailer do filme selecionado
     const res = await fetch(
       `https://api.themoviedb.org/3/movie/${filme.id}/videos?language=en-US`,
       options
     );
     const resJson = await res.json();
 
-    // Filtra o primeiro vídeo que seja um Trailer e do site YouTube
     const trailer = resJson.results.find(
       (video: Video) => video.type === "Trailer" && video.site === "YouTube"
     );
-    setTrailerKey(trailer?.key || null); // Armazena a chave do trailer se existir
+    setTrailer(trailer?.key || null);
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-5xl text-center font-bold text-gray-800 dark:text-gray-200 mt-4 mb-4">
+    <div
+      className="flex flex-col items-center bg-cover bg-center bg-repeat min-h-screen"
+      style={{
+        backgroundImage: `url('/cinema-background-dark.jpg')`,
+        backgroundSize: "450px 450px",
+      }}
+    >
+      <h1 className="text-5xl text-center font-bold text-gray-200 dark:text-gray-200 mt-4 mb-4">
         Lista de Filmes
       </h1>
-      <div className="flex gap-6 max-h-screen overflow-y-scroll mx-auto w-full bg-white bg-gradient-to-r dark:bg-gray-100 p-5">
+      <div className="flex gap-6  max-h-screen overflow-y-scroll mx-auto w-full bg-gradient-to-r dark:bg-gray-100 px-5">
         <List
           unstyled
-          className="flex flex-wrap w-full flex-col overflow-x-auto cursor-pointer  divide-y divide-gray-200 dark:divide-gray-700"
+          className=" flex flex-wrap w-full
+           flex-col overflow-x-auto cursor-pointer"
         >
           {filmes.map((filme) => (
-            <List.Item
+            <li
               onClick={() => handleFilmeClick(filme)}
               key={filme.id}
               className={`w-full md:w-1/3 p-2 transition-all duration-300 ${
@@ -102,7 +96,7 @@ export const ListaDeFilmes = () => {
                   </p>
                 </div>
               </div>
-            </List.Item>
+            </li>
           ))}
         </List>
         {selectedFilme && (
@@ -113,13 +107,13 @@ export const ListaDeFilmes = () => {
             <p className="text-sm text-gray-300 mt-2 leading-relaxed">
               {selectedFilme.overview}
             </p>
-            {trailerKey && (
+            {trailer && (
               <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Trailer</h2>
                 <iframe
                   width="100%"
                   height="315"
-                  src={`https://www.youtube.com/embed/${trailerKey}`}
+                  src={`https://www.youtube.com/embed/${trailer}`}
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

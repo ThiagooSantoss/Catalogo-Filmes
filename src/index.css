@@ -3,9 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 li {
-    margin : 5px 0 !important;
+  margin: 0 !important;
 }
-
-
