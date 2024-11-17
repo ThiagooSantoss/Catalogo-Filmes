@@ -1,5 +1,6 @@
 "use client";
 
+import { FaStar } from "react-icons/fa";
 import "../../index.css";
 import { Filme } from "../../types/filme";
 import { Video } from "../../types/video";
@@ -22,7 +23,7 @@ export const ListaDeFilmes = () => {
     };
     const buscaFilmes = async () => {
       const res = await fetch(
-        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+        "https://api.themoviedb.org/3/movie/popular?language=pt-BR&page=1",
         options
       );
       const resJson = await res.json();
@@ -45,7 +46,7 @@ export const ListaDeFilmes = () => {
     };
 
     const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${filme.id}/videos?language=en-US`,
+      `https://api.themoviedb.org/3/movie/${filme.id}/videos?language=pt-BR`,
       options
     );
     const resJson = await res.json();
@@ -119,6 +120,17 @@ export const ListaDeFilmes = () => {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
+                <div className="mt-4">
+                  <h3 className="text-gray-300 text-sm font-bold mb-2">
+                    AVALIAÇÃO DA IMDb
+                  </h3>
+                  <div className="flex items-center text-yellow-500">
+                    <FaStar className="mr-1" />
+                    <span className="text-lg text-gray-100">
+                      {selectedFilme.vote_average.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
