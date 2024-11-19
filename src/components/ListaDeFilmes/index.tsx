@@ -1,16 +1,20 @@
 "use client";
 
-import { FaStar } from "react-icons/fa";
+
 import "../../index.css";
 import { Filme } from "../../types/filme";
 import { Video } from "../../types/video";
 import { List, Avatar } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { ModalFilmes } from "../ModalFilmes";
 
 export const ListaDeFilmes = () => {
   const [filmes, setFilmes] = useState<Filme[]>([]);
   const [selectedFilme, setSelectedFilme] = useState<Filme | null>(null);
+
+  const [isModalOpen, setModalOpen] = useState(false);
   const [trailer, setTrailer] = useState<string>("");
+  const [isGrid, setIsGrid] = useState(true);
 
   useEffect(() => {
     const API_AUTH = import.meta.env.VITE_API_AUTH;
@@ -34,6 +38,7 @@ export const ListaDeFilmes = () => {
 
   const handleFilmeClick = async (filme: Filme) => {
     setSelectedFilme(filme);
+    setModalOpen(true);
     setTrailer("");
 
     const API_AUTH = import.meta.env.VITE_API_AUTH;
@@ -57,6 +62,9 @@ export const ListaDeFilmes = () => {
     setTrailer(trailer?.key || null);
   };
 
+  
+  
+
   return (
     <div
       className="flex flex-col items-center bg-cover bg-center bg-repeat min-h-screen"
@@ -68,27 +76,38 @@ export const ListaDeFilmes = () => {
       <h1 className="text-5xl text-center font-bold text-gray-200 dark:text-gray-200 mt-4 mb-4">
         Lista de Filmes
       </h1>
-      <div className="flex gap-6  max-h-screen overflow-y-scroll mx-auto w-full bg-gradient-to-r dark:bg-gray-100 px-5">
+      <div className="flex flex-col gap-6 max-h-screen overflow-y-scroll mx-auto w-full bg-gradient-to-r dark:bg-gray-100 px-5">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setIsGrid(!isGrid)}
+            className="py-2 px-4 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
+          >
+            {isGrid ? "Exibir como Lista" : "Exibir como Grid"}
+          </button>
+        </div>
         <List
           unstyled
-          className=" flex flex-wrap w-full
-           flex-col overflow-x-auto cursor-pointer"
+          className={`grid ${
+            isGrid
+              ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
+              : "flex flex-col"
+          } w-full`}
         >
           {filmes.map((filme) => (
             <li
               onClick={() => handleFilmeClick(filme)}
               key={filme.id}
-              className={`w-full md:w-1/3 p-2 transition-all duration-300 ${
+              className={`p-2 transition-all duration-300 cursor-pointer ${
                 selectedFilme?.id === filme.id
                   ? "bg-gray-400 dark:bg-gray-700 shadow-md rounded-lg"
                   : "bg-white dark:bg-gray-100"
-              }`}
+              } ${isGrid ? "border rounded-lg shadow" : ""}`}
             >
               <div className="flex items-center space-x-4">
                 <Avatar
                   img={`https://image.tmdb.org/t/p/w500${filme.poster_path}`}
                   alt={filme.original_title}
-                  rounded
+                  rounded={!isGrid}
                   size="lg"
                 />
                 <div className="min-w-0 flex-1">
@@ -100,41 +119,8 @@ export const ListaDeFilmes = () => {
             </li>
           ))}
         </List>
-        {selectedFilme && (
-          <div className="w-full md:w-1/3 border border-gray-700 bg-gray-800 text-white p-4 rounded-lg shadow-lg mt-4 md:mt-0">
-            <h1 className="text-2xl font-bold mb-2 text-gray-100 border-b border-gray-600 pb-2">
-              {selectedFilme.original_title}
-            </h1>
-            <p className="text-sm text-gray-300 mt-2 leading-relaxed">
-              {selectedFilme.overview}
-            </p>
-            {trailer && (
-              <div className="mt-4">
-                <h2 className="text-xl font-semibold mb-2">Trailer</h2>
-                <iframe
-                  width="100%"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${trailer}`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <div className="mt-4">
-                  <h3 className="text-gray-300 text-sm font-bold mb-2">
-                    AVALIAÇÃO DA IMDb
-                  </h3>
-                  <div className="flex items-center text-yellow-500">
-                    <FaStar className="mr-1" />
-                    <span className="text-lg text-gray-100">
-                      {selectedFilme.vote_average.toFixed(1)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+
+        {selectedFilme && <ModalFilmes  isModalOpen={isModalOpen}  setModalOpen={setModalOpen} selectedFilme={selectedFilme} setSelectedFilme={setSelectedFilme} trailer={trailer} />}
       </div>
     </div>
   );
