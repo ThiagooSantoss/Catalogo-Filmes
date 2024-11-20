@@ -1,6 +1,7 @@
 "use client";
 import { Button, Modal } from "flowbite-react";
 import { FaStar } from "react-icons/fa";
+import { ModalFilmesProps } from "../types/modal";
 
 export function ModalFilmes({
   isModalOpen,
@@ -8,7 +9,9 @@ export function ModalFilmes({
   selectedFilme,
   setSelectedFilme,
   trailer,
-}) {
+
+  
+}: ModalFilmesProps) {
   const closeModalHandler = () => {
     console.log("fechou");
     setModalOpen(false);
@@ -21,7 +24,7 @@ export function ModalFilmes({
         on: "bg-opacity-60 fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full items-center justify-center flex bg-gray-900",
       },
     },
-  } 
+  };
 
   return (
     <>
