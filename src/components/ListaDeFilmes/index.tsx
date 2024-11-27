@@ -76,7 +76,7 @@ export const ListaDeFilmes = () => {
       <h1 className="text-5xl text-center font-bold text-gray-200 dark:text-gray-200 mt-4 mb-4">
         Lista de Filmes
       </h1>
-      <div className="flex flex-col gap-6 max-h-screen overflow-y-scroll mx-auto w-full bg-gradient-to-r dark:bg-gray-100 px-5">
+      <div className="flex flex-col gap-6 max-h-screen  mx-auto w-full bg-gradient-to-r dark:bg-gray-100 px-5">
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setIsGrid(!isGrid)}
